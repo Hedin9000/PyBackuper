@@ -1,11 +1,7 @@
 {
   "RootFolder": "D:/AppsWorkfolder/PyBackuper/",
   "StoreItems" : [
-    {
-      "Name": "TestVaultData",
-      "Path": "D:/AppsWorkfolder/Vault",
-      "InnerPath": "test/vault",
-      "Enabled" : true
-    }
+    {"Name": "TestVaultData", "Path": "D:/AppsWorkfolder/Vault", "InnerPath": "test/vault", "Enabled" : true },
+    {"Name": "PyFile", "Path": "D:\\home\\python\\FileSorter\\main.py", "InnerPath": "test/file.py", "Enabled" : true }
   ]
 }
