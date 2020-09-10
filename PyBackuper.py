@@ -4,6 +4,7 @@ from os import listdir
 from os.path import isfile, join
 import json
 import logging
+import zipfile
 
 ConfigFilePath = 'config.json'
 
@@ -42,6 +43,32 @@ def fill_default(item):
         item['InnerPath'] = '/'
     if 'Name' not in item:
         item['Name'] = os.path.basename(item['Path'])
+    if 'Zip' not in item:
+        item['Zip'] = True
+
+
+def zipdir(path, ziph):
+    for root, dirs, files in os.walk(path):
+        for file in files:
+            ziph.write(os.path.join(root, file))
+
+
+def remove_prefix(text, prefix):
+    if text.startswith(prefix):
+        return text[len(prefix):]
+    return text  # or whatever
+
+
+def zip_item(item, zip_path):
+    zipf = zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED)
+
+    if isfile(item):
+        zipf.write(item, os.path.basename(item))
+    else:
+        for root, dirs, files in os.walk(item):
+            for file in files:
+                zipf.write(os.path.join(root, file), os.path.join(remove_prefix(root, item), file))
+    zipf.close()
 
 
 def main():
@@ -52,8 +79,15 @@ def main():
             fill_default(store_item)
 
             if store_item['Enabled']:
-                destination_dir = os.path.join(data['RootFolder'], store_item['InnerPath'])
-                copy_item(store_item['Path'], destination_dir)
+                destination = os.path.join(data['RootFolder'], store_item['InnerPath'])
+
+                if store_item['Zip']:
+                    destination = destination + '.zip'
+                    delete_if_exist(destination)
+                    zip_item(store_item['Path'], destination)
+                else:
+                    copy_item(store_item['Path'], destination)
+                    
                 logging.info(f"{store_item['Name']} successfully stored to {store_item['InnerPath']}")
 
 
