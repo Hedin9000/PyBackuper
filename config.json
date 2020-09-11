@@ -1,7 +1,47 @@
 {
-  "RootFolder": "D:/AppsWorkfolder/PyBackuper/",
-  "StoreItems" : [
-    {"Name": "TestVaultData", "Path": "D:/AppsWorkfolder/Vault", "InnerPath": "test/vault", "Zip": true},
-    {"Name": "PyFile", "Path": "D:\\home\\python\\FileSorter\\main.py", "InnerPath": "test/file.py", "Zip" : true }
+  "RootFolder": "D:\\Backup\\AutoBackup",
+  "StoreItems": [
+    {
+      "Name": "SpaceEnginers-Blueprints",
+      "Path": "C:\\Users\\Varlo\\AppData\\Roaming\\SpaceEngineers\\Blueprints\\local",
+      "InnerPath": "GameSaves\\SpaceEnginers\\Blueprints",
+      "Zip": true
+    },
+    {
+      "Name": "SpaceEnginers-Saves",
+      "Path": "C:\\Users\\Varlo\\AppData\\Roaming\\SpaceEngineers\\Saves",
+      "InnerPath": "GameSaves\\SpaceEnginers\\Saves",
+      "Zip": true
+    },
+    {
+      "Name": "Astroneer-Saves",
+      "Path": "C:\\Users\\Varlo\\AppData\\Local\\Astro\\Saved",
+      "InnerPath": "GameSaves\\Astroneer",
+      "Zip": true
+    },
+	{
+      "Name": "3D Printing files",
+      "Path": "D:\\Projects\\3DPrinting",
+      "InnerPath": "3DPrinting",
+      "Zip": true
+    },
+    {
+      "Name": "Factorio-Saves+Blueprints",
+      "Path": "C:\\Users\\Varlo\\AppData\\Roaming\\Factorio",
+      "InnerPath": "GameSaves\\Factorio",
+      "Zip": true
+    },
+	{
+      "Name": "DOOMEternal-Saves",
+      "Path": "C:\\Users\\Varlo\\Saved Games\\id Software\\DOOMEternal",
+      "InnerPath": "GameSaves\\DOOMEternal",
+      "Zip": true
+    },
+	{
+      "Name": "VirtualDesktop Configs",
+      "Path": "C:\\Users\\Varlo\\AppData\\Roaming\\Virtual Desktop",
+      "InnerPath": "SoftwareConfigs\\VirtualDesktop",
+      "Zip": true
+    }
   ]
 }
