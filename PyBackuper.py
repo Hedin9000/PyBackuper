@@ -70,6 +70,8 @@ def remove_prefix(text, prefix):
 
 
 def zip_item(item, zip_path):
+    create_dir_if_not_exist(os.path.dirname(zip_path))
+
     zipf = zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED)
 
     if isfile(item):
@@ -98,7 +100,8 @@ def get_size(start_path):
 
 def main():
     logging.basicConfig(format='%(asctime)s: %(levelname)s\t%(message)s', level=logging.DEBUG)
-    total_size = 0;
+    zipfile.Z_DEFAULT_COMPRESSION = 9
+    total_size = 0
     with open(ConfigFilePath) as json_file:
         data = json.load(json_file)
         for store_item in data['StoreItems']:
