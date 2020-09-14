@@ -1,7 +1,18 @@
 {
   "RootFolder": "D:/AppsWorkfolder/PyBackuper/",
-  "StoreItems" : [
-    {"Name": "TestVaultData", "Path": "D:/AppsWorkfolder/Vault", "InnerPath": "test/vault", "Zip": true},
-    {"Name": "PyFile", "Path": "D:\\home\\python\\FileSorter\\main.py", "InnerPath": "test/file.py", "Zip" : true }
+  "StoreItems": [
+    {
+      "Name": "TestVaultData",
+      "Path": "D:/AppsWorkfolder/Vault",
+      "InnerPath": "test/vault",
+      "Zip": true
+    },
+    {
+      "Name": "PyFile",
+      "Path": "D:\\home\\python\\FileSorter\\main.py",
+      "InnerPath": "test/file.py",
+      "Zip": true,
+      "Condition":"Always"
+    }
   ]
 }
