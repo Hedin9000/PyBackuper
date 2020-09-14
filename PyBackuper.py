@@ -1,50 +1,18 @@
 import os
-import shutil
-import math
-from datetime import time
 from os.path import isfile, join
 import json
 import logging
 import zipfile
+import file_operations as fo
 
 ConfigFilePath = 'config.json'
-SizeNames = ("B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB")
-
-
-def convert_size(size_bytes):
-    if size_bytes == 0:
-        return "0B"
-    i = int(math.floor(math.log(size_bytes, 1024)))
-    p = math.pow(1024, i)
-    s = round(size_bytes / p, 2)
-    return "%s %s" % (s, SizeNames[i])
-
-
-def create_dir_if_not_exist(path):
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-
-def delete_if_exist(path):
-    if os.path.exists(path):
-        if isfile(path):
-            os.remove(path)
-        else:
-            shutil.rmtree(path)
-
-
-def copy_overwrite(item, destination):
-    if isfile(item):
-        shutil.copyfile(item, destination)
-    else:
-        shutil.copytree(item, destination)
 
 
 def copy_item(file_path, destination_path):
-    create_dir_if_not_exist(os.path.dirname(destination_path))
+    fo.create_dir_if_not_exist(os.path.dirname(destination_path))
     if os.path.exists(destination_path):
-        delete_if_exist(destination_path)
-    copy_overwrite(file_path, destination_path)
+        fo.delete_if_exist(destination_path)
+    fo.copy_overwrite(file_path, destination_path)
 
 
 def fill_default(item):
@@ -58,47 +26,6 @@ def fill_default(item):
         item['Zip'] = True
     if 'Condition' not in item:
         item['Condition'] = 'Updated'
-
-
-def zipdir(path, ziph):
-    for root, dirs, files in os.walk(path):
-        for file in files:
-            ziph.write(os.path.join(root, file))
-
-
-def remove_prefix(text, prefix):
-    if text.startswith(prefix):
-        return text[len(prefix):]
-    return text  # or whatever
-
-
-def zip_item(item, zip_path):
-    create_dir_if_not_exist(os.path.dirname(zip_path))
-
-    zipf = zipfile.ZipFile(zip_path, 'w', zipfile.ZIP_DEFLATED)
-
-    if isfile(item):
-        zipf.write(item, os.path.basename(item))
-    else:
-        for root, dirs, files in os.walk(item):
-            for file in files:
-                zipf.write(os.path.join(root, file), os.path.join(remove_prefix(root, item), file))
-    zipf.close()
-
-
-def get_size(start_path):
-    if isfile(start_path):
-        return os.path.getsize(start_path)
-
-    total_size = 0
-    for dir_path, dir_names, file_names in os.walk(start_path):
-        for f in file_names:
-            fp = os.path.join(dir_path, f)
-            # skip if it is symbolic link
-            if not os.path.islink(fp):
-                total_size += os.path.getsize(fp)
-
-    return total_size
 
 
 def get_updated_datetime(path):
@@ -122,33 +49,36 @@ def check_condition(store_item, destination):
         return False
 
 
-def main():
+def pre_config():
     logging.basicConfig(format='%(asctime)s: %(levelname)s\t%(message)s', level=logging.DEBUG)
     zipfile.Z_DEFAULT_COMPRESSION = 9
-    total_size = 0
+
+
+def main():
+    pre_config()
     with open(ConfigFilePath) as json_file:
         data = json.load(json_file)
         for store_item in data['StoreItems']:
             fill_default(store_item)
 
-            if store_item['Enabled'] :
+            if store_item['Enabled']:
                 destination = os.path.join(data['RootFolder'], store_item['InnerPath'])
 
                 if store_item['Zip']:
                     destination = destination + '.zip'
                     if not check_condition(store_item, destination):
                         continue
-                    delete_if_exist(destination)
-                    zip_item(store_item['Path'], destination)
+                    fo.delete_if_exist(destination)
+                    fo.zip_item(store_item['Path'], destination)
                 else:
                     if not check_condition(store_item, destination):
                         continue
                     copy_item(store_item['Path'], destination)
-                item_size = get_size(destination)
-                logging.info(
-                    f"{store_item['Name']} successfully stored to {store_item['InnerPath']} ({convert_size(item_size)})")
+                item_size = fo.get_formatted_size(destination)
+                logging.info(f"{store_item['Name']} successfully stored to {store_item['InnerPath']} ({item_size})")
 
-    logging.info(f"Total size of Store: {convert_size(get_size(data['RootFolder']))}")
+    logging.info(
+        f"Total size of Store: {fo.convert_size(fo.get_formatted_size(data['RootFolder']))}")
 
 
 if __name__ == "__main__":
