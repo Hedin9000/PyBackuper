@@ -55,7 +55,7 @@ def fill_default(item):
     if 'Name' not in item:
         item['Name'] = os.path.basename(item['Path'])
     if 'Zip' not in item:
-        item['Zip'] = False
+        item['Zip'] = True
     if 'Condition' not in item:
         item['Condition'] = 'Updated'
 
