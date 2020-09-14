@@ -18,8 +18,9 @@
 }
 ```
 ##### TODO:
-1. Encription
+1. Encryption
 2. Compression level selection
 3. Multi-root system 
 4. Categories 
 5. Logfile
+6. Recover mode

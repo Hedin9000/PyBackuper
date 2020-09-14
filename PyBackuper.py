@@ -51,7 +51,7 @@ def fill_default(item):
     if 'Enabled' not in item:
         item['Enabled'] = True
     if 'InnerPath' not in item:
-        item['InnerPath'] = '/'
+        item['InnerPath'] = os.path.basename(item['Path'])
     if 'Name' not in item:
         item['Name'] = os.path.basename(item['Path'])
     if 'Zip' not in item:
