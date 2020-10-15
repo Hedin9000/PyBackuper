@@ -95,16 +95,18 @@ def copy_data(store_item, destination):
 
 
 def zip_data(store_item, destination):
-    item = store_item.Path
-    create_dir_if_not_exist(os.path.dirname(destination))
-    zipf = zipfile.ZipFile(destination, 'w', zipfile.ZIP_DEFLATED)
-    if isfile(item):
-        zipf.write(item, os.path.basename(item))
-    else:
-        for root, dirs, files in os.walk(item):
-            for file in files:
-                zipf.write(os.path.join(root, file), os.path.join(remove_prefix(root, item), file))
-    zipf.close()
+    try:
+        item = store_item.Path
+        create_dir_if_not_exist(os.path.dirname(destination))
+        zipf = zipfile.ZipFile(destination, 'w', zipfile.ZIP_DEFLATED)
+        if isfile(item):
+            zipf.write(item, os.path.basename(item))
+        else:
+            for root, dirs, files in os.walk(item):
+                for file in files:
+                    zipf.write(os.path.join(root, file), os.path.join(remove_prefix(root, item), file))
+    finally:
+        zipf.close()
 
 
 def get_destination(root_path, store_item):
@@ -133,14 +135,16 @@ def main():
                     StoreMode.Copy: copy_data,
                     StoreMode.Zip: zip_data
                 }
+                try:
+                    mode_selector[store_item.Mode](store_item, destination)
+                    item_size = get_formatted_size(destination)
+                    logging.info(f"{store_item.Name} successfully stored to {store_item.InnerPath} ({item_size})")
+                except PermissionError as permission_error:
+                    logging.error(
+                        f"{store_item.Name} 'Permission denied' - .{permission_error.filename.replace(store_item.Path, '')} ")
+                    delete_if_exist(destination)
 
-                mode_selector[store_item.Mode](store_item, destination)
-
-                item_size = get_formatted_size(destination)
-                logging.info(f"{store_item.Name} successfully stored to {store_item.InnerPath} ({item_size})")
-
-    logging.info(
-        f"Total size of Store: {get_formatted_size(data['RootFolder'])}")
+    logging.info(f"Total size of Store: {get_formatted_size(data['RootFolder'])}")
 
 
 if __name__ == "__main__":
