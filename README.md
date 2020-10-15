@@ -9,10 +9,11 @@
       "Path": "D:\\MaximumConfigExample\\main.py",
       "InnerPath": "test/file.py",
       "Zip": false,      
-      "Condition": "Always"
+      "Condition": "Always", // Always | IfUpdated
+      "Enabled" : false
     },
     {
-      "Path": "D:/MinimumConfigExapmle/MyItem"
+      "Path": "D:/MinimumConfigExample/MyItem"
     }
   ]
 }
@@ -24,3 +25,4 @@
 4. Categories 
 5. Logfile
 6. Recover mode
+7. Rollback if error
